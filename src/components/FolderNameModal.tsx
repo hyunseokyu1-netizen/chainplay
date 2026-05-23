@@ -6,8 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
+  Keyboard,
 } from 'react-native';
 import { t } from '../i18n';
 
@@ -29,6 +28,24 @@ export default function FolderNameModal({
   onClose,
 }: Props) {
   const [name, setName] = useState(initialName);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    if (!visible) {
+      setKeyboardHeight(0);
+      return;
+    }
+    const show = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const hide = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, [visible]);
 
   useEffect(() => {
     if (visible) setName(initialName);
@@ -41,14 +58,15 @@ export default function FolderNameModal({
     onClose();
   };
 
+  const sheetPaddingBottom = keyboardHeight > 0 ? 16 : 24 + bottomInset;
+  // 삼성 키보드 상단 툴바(~52px)가 keyboardHeight에 포함되지 않아 여유분 추가
+  const overlayPaddingBottom = keyboardHeight > 0 ? keyboardHeight + 80 : 0;
+
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={onClose} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.kavWrapper}
-      >
-        <View style={[styles.sheet, { paddingBottom: 24 + bottomInset }]}>
+      <View style={[styles.overlay, { paddingBottom: overlayPaddingBottom }]}>
+        <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={onClose} />
+        <View style={[styles.sheet, { paddingBottom: sheetPaddingBottom }]}>
           <Text style={styles.title}>
             {mode === 'create' ? t.createFolderTitle : t.renameFolderTitle}
           </Text>
@@ -76,21 +94,16 @@ export default function FolderNameModal({
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
+  overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  kavWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    justifyContent: 'flex-end',
   },
   sheet: {
     backgroundColor: '#1e1e2e',
