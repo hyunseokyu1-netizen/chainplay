@@ -1,79 +1,71 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
+import { View, Text, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePlaylist } from './src/hooks/usePlaylist';
+import { useFolders } from './src/hooks/useFolders';
 import { t } from './src/i18n';
-import Player from './src/components/Player';
-import Playlist from './src/components/Playlist';
-import AddUrlModal from './src/components/AddUrlModal';
+import FolderListScreen from './src/screens/FolderListScreen';
+import PlaylistScreen from './src/screens/PlaylistScreen';
 
 function AppContent() {
-  const [modalVisible, setModalVisible] = useState(false);
   const { bottom: bottomInset } = useSafeAreaInsets();
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+
   const {
-    playlist,
-    currentIndex,
-    currentItem,
+    folders,
     isLoading,
-    addUrl,
-    removeItem,
-    moveItem,
-    playNext,
-    playPrev,
-    playAt,
-  } = usePlaylist();
+    createFolder,
+    renameFolder,
+    deleteFolder,
+    addUrlToFolder,
+    removeItemFromFolder,
+    moveItemInFolder,
+    moveItemBetweenFolders,
+  } = useFolders();
+
+  const activeFolder = activeFolderId ? folders.find((f) => f.id === activeFolderId) ?? null : null;
+
+  // 활성 폴더가 삭제된 경우 목록으로 복귀
+  if (activeFolderId && !activeFolder) {
+    setActiveFolderId(null);
+  }
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#0f0f1a" />
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-        <View style={styles.header}>
-          <View style={styles.logoRow}>
-            <View style={styles.logoIcon}>
-              <View style={styles.logoTriangle} />
+        {!activeFolder ? (
+          <>
+            <View style={styles.header}>
+              <View style={styles.logoRow}>
+                <View style={styles.logoIcon}>
+                  <View style={styles.logoTriangle} />
+                </View>
+                <Text style={styles.headerTitle}>ChainPlay</Text>
+              </View>
+              <Text style={styles.headerSub}>{t.folderListTitle}</Text>
             </View>
-            <Text style={styles.headerTitle}>ChainPlay</Text>
-          </View>
-        </View>
-
-        <Player
-          item={currentItem}
-          onEnded={playNext}
-          onPrev={playPrev}
-          onNext={playNext}
-          hasPrev={currentIndex > 0}
-          hasNext={currentIndex < playlist.length - 1}
-        />
-
-        <View style={styles.listHeader}>
-          <Text style={styles.listTitle}>{t.playlistHeader}</Text>
-          <Text style={styles.listCount}>{t.itemCount(playlist.length)}</Text>
-        </View>
-
-        <View style={styles.listContainer}>
-          <Playlist
-            playlist={playlist}
-            currentIndex={currentIndex}
-            onMoveUp={(i) => moveItem(i, 'up')}
-            onMoveDown={(i) => moveItem(i, 'down')}
-            onDelete={removeItem}
-            onPlay={playAt}
+            <FolderListScreen
+              folders={folders}
+              bottomInset={bottomInset}
+              onSelectFolder={setActiveFolderId}
+              onCreateFolder={createFolder}
+              onRenameFolder={renameFolder}
+              onDeleteFolder={deleteFolder}
+            />
+          </>
+        ) : (
+          <PlaylistScreen
+            folder={activeFolder}
+            allFolders={folders}
+            isLoading={isLoading}
+            bottomInset={bottomInset}
+            onBack={() => setActiveFolderId(null)}
+            onAddUrl={addUrlToFolder}
+            onRemoveItem={removeItemFromFolder}
+            onMoveItemInFolder={moveItemInFolder}
+            onMoveItemBetweenFolders={moveItemBetweenFolders}
           />
-          <TouchableOpacity
-            style={[styles.addUrlBtn, { bottom: 16 + bottomInset }]}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.addUrlBtnText}>{t.addUrlBtn}</Text>
-          </TouchableOpacity>
-        </View>
-
-        <AddUrlModal
-          visible={modalVisible}
-          isLoading={isLoading}
-          onAdd={addUrl}
-          onClose={() => setModalVisible(false)}
-          bottomInset={bottomInset}
-        />
+        )}
       </SafeAreaView>
     </>
   );
@@ -133,43 +125,8 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.5,
   },
-  addUrlBtn: {
-    position: 'absolute',
-    right: 16,
-    backgroundColor: '#8b1a1a',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 24,
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.4,
-    shadowRadius: 6,
-  },
-  addUrlBtnText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  listHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    borderBottomWidth: 1,
-    borderBottomColor: '#2a2a3e',
-  },
-  listTitle: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  listCount: {
-    color: '#888',
+  headerSub: {
+    color: '#666',
     fontSize: 13,
-  },
-  listContainer: {
-    flex: 1,
   },
 });

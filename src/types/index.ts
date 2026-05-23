@@ -5,3 +5,10 @@ export interface PlaylistItem {
   thumbnail: string;
   url: string;
 }
+
+export interface Folder {
+  id: string;
+  name: string;
+  items: PlaylistItem[];
+  createdAt: number;
+}

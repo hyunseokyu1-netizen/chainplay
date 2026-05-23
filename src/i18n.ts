@@ -44,4 +44,25 @@ export const t = {
   // 에러 메시지
   invalidUrl: isKorean ? '유효한 유튜브 URL이 아닙니다.' : 'Invalid YouTube URL.',
   alreadyExists: isKorean ? '이미 플레이리스트에 있습니다.' : 'Already in your playlist.',
+
+  // 폴더 관련
+  defaultFolderName: isKorean ? '기본 폴더' : 'Default',
+  folderListTitle: isKorean ? '폴더' : 'Folders',
+  newFolder: isKorean ? '+ 새 폴더' : '+ New Folder',
+  noFolders: isKorean ? '폴더가 없습니다' : 'No folders yet',
+  noFoldersHint: isKorean ? '아래 버튼으로 폴더를 만들어보세요' : 'Tap + to create a folder',
+  folderVideoCount: (n: number) => isKorean ? `영상 ${n}개` : `${n} video${n === 1 ? '' : 's'}`,
+  createFolderTitle: isKorean ? '폴더 만들기' : 'New Folder',
+  renameFolderTitle: isKorean ? '이름 변경' : 'Rename',
+  folderNamePlaceholder: isKorean ? '폴더 이름' : 'Folder name',
+  confirm: isKorean ? '확인' : 'OK',
+  cancel: isKorean ? '취소' : 'Cancel',
+  deleteFolderConfirm: (name: string) =>
+    isKorean
+      ? `"${name}" 폴더를 삭제할까요?\n영상 목록도 함께 삭제됩니다.`
+      : `Delete "${name}"?\nAll videos in it will be removed.`,
+  moveToFolder: isKorean ? '폴더로 이동' : 'Move to Folder',
+  moveToFolderHint: isKorean ? '이동할 폴더를 선택하세요' : 'Select destination folder',
+  noOtherFolders: isKorean ? '다른 폴더가 없습니다' : 'No other folders',
+  backToFolders: isKorean ? '← 폴더 목록' : '← Folders',
 };

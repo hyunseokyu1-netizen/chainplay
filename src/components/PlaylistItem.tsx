@@ -12,6 +12,7 @@ interface Props {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
+  onMoveToFolder?: () => void;
 }
 
 export default function PlaylistItemRow({
@@ -24,6 +25,7 @@ export default function PlaylistItemRow({
   onDelete,
   onMoveUp,
   onMoveDown,
+  onMoveToFolder,
 }: Props) {
   return (
     <View style={[styles.container, isCurrent && styles.current]}>
@@ -55,6 +57,12 @@ export default function PlaylistItemRow({
           </Text>
         </View>
       </TouchableOpacity>
+
+      {onMoveToFolder && (
+        <TouchableOpacity style={styles.moveToFolderBtn} onPress={onMoveToFolder} hitSlop={8}>
+          <Text style={styles.moveToFolderIcon}>↗</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.deleteBtn} onPress={onDelete} hitSlop={8}>
         <Text style={styles.deleteIcon}>✕</Text>
@@ -117,8 +125,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
   },
+  moveToFolderBtn: {
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+  },
+  moveToFolderIcon: {
+    color: '#555',
+    fontSize: 16,
+  },
   deleteBtn: {
-    paddingLeft: 10,
+    paddingLeft: 6,
     paddingVertical: 4,
   },
   deleteIcon: {
