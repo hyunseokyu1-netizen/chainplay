@@ -1,39 +1,39 @@
 import React, { useState } from 'react';
 import { View, Text, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useFolders } from './src/hooks/useFolders';
+import { useChains } from './src/hooks/useChains';
 import { t } from './src/i18n';
-import FolderListScreen from './src/screens/FolderListScreen';
+import ChainListScreen from './src/screens/ChainListScreen';
 import PlaylistScreen from './src/screens/PlaylistScreen';
 
 function AppContent() {
   const { bottom: bottomInset } = useSafeAreaInsets();
-  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+  const [activeChainId, setActiveChainId] = useState<string | null>(null);
 
   const {
-    folders,
+    chains,
     isLoading,
-    createFolder,
-    renameFolder,
-    deleteFolder,
-    addUrlToFolder,
-    removeItemFromFolder,
-    moveItemInFolder,
-    moveItemBetweenFolders,
-  } = useFolders();
+    createChain,
+    renameChain,
+    deleteChain,
+    addUrlToChain,
+    removeItemFromChain,
+    moveItemInChain,
+    moveItemBetweenChains,
+  } = useChains();
 
-  const activeFolder = activeFolderId ? folders.find((f) => f.id === activeFolderId) ?? null : null;
+  const activeChain = activeChainId ? chains.find((c) => c.id === activeChainId) ?? null : null;
 
-  // 활성 폴더가 삭제된 경우 목록으로 복귀
-  if (activeFolderId && !activeFolder) {
-    setActiveFolderId(null);
+  // 활성 체인이 삭제된 경우 목록으로 복귀
+  if (activeChainId && !activeChain) {
+    setActiveChainId(null);
   }
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#0f0f1a" />
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-        {!activeFolder ? (
+        {!activeChain ? (
           <>
             <View style={styles.header}>
               <View style={styles.logoRow}>
@@ -42,28 +42,28 @@ function AppContent() {
                 </View>
                 <Text style={styles.headerTitle}>ChainPlay</Text>
               </View>
-              <Text style={styles.headerSub}>{t.folderListTitle}</Text>
+              <Text style={styles.headerSub}>{t.chainListTitle}</Text>
             </View>
-            <FolderListScreen
-              folders={folders}
+            <ChainListScreen
+              chains={chains}
               bottomInset={bottomInset}
-              onSelectFolder={setActiveFolderId}
-              onCreateFolder={createFolder}
-              onRenameFolder={renameFolder}
-              onDeleteFolder={deleteFolder}
+              onSelectChain={setActiveChainId}
+              onCreateChain={createChain}
+              onRenameChain={renameChain}
+              onDeleteChain={deleteChain}
             />
           </>
         ) : (
           <PlaylistScreen
-            folder={activeFolder}
-            allFolders={folders}
+            chain={activeChain}
+            allChains={chains}
             isLoading={isLoading}
             bottomInset={bottomInset}
-            onBack={() => setActiveFolderId(null)}
-            onAddUrl={addUrlToFolder}
-            onRemoveItem={removeItemFromFolder}
-            onMoveItemInFolder={moveItemInFolder}
-            onMoveItemBetweenFolders={moveItemBetweenFolders}
+            onBack={() => setActiveChainId(null)}
+            onAddUrl={addUrlToChain}
+            onRemoveItem={removeItemFromChain}
+            onMoveItemInChain={moveItemInChain}
+            onMoveItemBetweenChains={moveItemBetweenChains}
           />
         )}
       </SafeAreaView>

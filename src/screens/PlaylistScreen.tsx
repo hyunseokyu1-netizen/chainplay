@@ -1,40 +1,40 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Folder, PlaylistItem } from '../types';
+import { Chain, PlaylistItem } from '../types';
 import { t } from '../i18n';
 import Player from '../components/Player';
 import Playlist from '../components/Playlist';
 import AddUrlModal from '../components/AddUrlModal';
-import MoveToFolderModal from '../components/MoveToFolderModal';
+import MoveToChainModal from '../components/MoveToChainModal';
 
 interface Props {
-  folder: Folder;
-  allFolders: Folder[];
+  chain: Chain;
+  allChains: Chain[];
   isLoading: boolean;
   bottomInset: number;
   onBack: () => void;
-  onAddUrl: (folderId: string, url: string) => Promise<string | null>;
-  onRemoveItem: (folderId: string, itemId: string) => void;
-  onMoveItemInFolder: (folderId: string, index: number, direction: 'up' | 'down') => void;
-  onMoveItemBetweenFolders: (itemId: string, fromFolderId: string, toFolderId: string) => void;
+  onAddUrl: (chainId: string, url: string) => Promise<string | null>;
+  onRemoveItem: (chainId: string, itemId: string) => void;
+  onMoveItemInChain: (chainId: string, index: number, direction: 'up' | 'down') => void;
+  onMoveItemBetweenChains: (itemId: string, fromChainId: string, toChainId: string) => void;
 }
 
 export default function PlaylistScreen({
-  folder,
-  allFolders,
+  chain,
+  allChains,
   isLoading,
   bottomInset,
   onBack,
   onAddUrl,
   onRemoveItem,
-  onMoveItemInFolder,
-  onMoveItemBetweenFolders,
+  onMoveItemInChain,
+  onMoveItemBetweenChains,
 }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [moveTarget, setMoveTarget] = useState<PlaylistItem | null>(null);
 
-  const items = folder.items;
+  const items = chain.items;
 
   const playNext = useCallback(() => {
     setCurrentIndex((ci) => (ci + 1 < items.length ? ci + 1 : ci));
@@ -48,7 +48,7 @@ export default function PlaylistScreen({
     (itemId: string) => {
       const idx = items.findIndex((i) => i.id === itemId);
       const len = items.length;
-      onRemoveItem(folder.id, itemId);
+      onRemoveItem(chain.id, itemId);
       setCurrentIndex((ci) => {
         if (len <= 1) return 0;
         if (idx < ci) return ci - 1;
@@ -56,12 +56,12 @@ export default function PlaylistScreen({
         return ci;
       });
     },
-    [folder.id, items, onRemoveItem]
+    [chain.id, items, onRemoveItem]
   );
 
-  const handleMoveInFolder = useCallback(
+  const handleMoveInChain = useCallback(
     (index: number, direction: 'up' | 'down') => {
-      onMoveItemInFolder(folder.id, index, direction);
+      onMoveItemInChain(chain.id, index, direction);
       setCurrentIndex((ci) => {
         const target = direction === 'up' ? index - 1 : index + 1;
         if (ci === index) return target;
@@ -69,15 +69,15 @@ export default function PlaylistScreen({
         return ci;
       });
     },
-    [folder.id, onMoveItemInFolder]
+    [chain.id, onMoveItemInChain]
   );
 
-  const handleMoveToFolder = useCallback(
-    (toFolderId: string) => {
+  const handleMoveToChain = useCallback(
+    (toChainId: string) => {
       if (!moveTarget) return;
       const idx = items.findIndex((i) => i.id === moveTarget.id);
       const len = items.length;
-      onMoveItemBetweenFolders(moveTarget.id, folder.id, toFolderId);
+      onMoveItemBetweenChains(moveTarget.id, chain.id, toChainId);
       setCurrentIndex((ci) => {
         if (len <= 1) return 0;
         if (idx < ci) return ci - 1;
@@ -86,7 +86,7 @@ export default function PlaylistScreen({
       });
       setMoveTarget(null);
     },
-    [folder.id, items, moveTarget, onMoveItemBetweenFolders]
+    [chain.id, items, moveTarget, onMoveItemBetweenChains]
   );
 
   const currentItem = items[currentIndex] ?? null;
@@ -95,7 +95,7 @@ export default function PlaylistScreen({
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={onBack} hitSlop={8}>
-          <Text style={styles.backText}>{t.backToFolders}</Text>
+          <Text style={styles.backText}>{t.backToChains}</Text>
         </TouchableOpacity>
       </View>
 
@@ -109,7 +109,7 @@ export default function PlaylistScreen({
       />
 
       <View style={styles.listHeader}>
-        <Text style={styles.listTitle}>{folder.name}</Text>
+        <Text style={styles.listTitle}>{chain.name}</Text>
         <Text style={styles.listCount}>{t.itemCount(items.length)}</Text>
       </View>
 
@@ -117,11 +117,11 @@ export default function PlaylistScreen({
         <Playlist
           playlist={items}
           currentIndex={currentIndex}
-          onMoveUp={(i) => handleMoveInFolder(i, 'up')}
-          onMoveDown={(i) => handleMoveInFolder(i, 'down')}
+          onMoveUp={(i) => handleMoveInChain(i, 'up')}
+          onMoveDown={(i) => handleMoveInChain(i, 'down')}
           onDelete={handleRemove}
           onPlay={setCurrentIndex}
-          onMoveToFolder={allFolders.length > 1 ? setMoveTarget : undefined}
+          onMoveToChain={allChains.length > 1 ? setMoveTarget : undefined}
         />
         <TouchableOpacity
           style={[styles.addUrlBtn, { bottom: 16 + bottomInset }]}
@@ -134,18 +134,18 @@ export default function PlaylistScreen({
       <AddUrlModal
         visible={addModalVisible}
         isLoading={isLoading}
-        onAdd={(url) => onAddUrl(folder.id, url)}
+        onAdd={(url) => onAddUrl(chain.id, url)}
         onClose={() => setAddModalVisible(false)}
         bottomInset={bottomInset}
       />
 
-      <MoveToFolderModal
+      <MoveToChainModal
         visible={moveTarget !== null}
         item={moveTarget}
-        folders={allFolders}
-        currentFolderId={folder.id}
+        chains={allChains}
+        currentChainId={chain.id}
         bottomInset={bottomInset}
-        onMove={handleMoveToFolder}
+        onMove={handleMoveToChain}
         onClose={() => setMoveTarget(null)}
       />
     </View>

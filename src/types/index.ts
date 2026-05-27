@@ -6,7 +6,7 @@ export interface PlaylistItem {
   url: string;
 }
 
-export interface Folder {
+export interface Chain {
   id: string;
   name: string;
   items: PlaylistItem[];

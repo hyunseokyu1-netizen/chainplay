@@ -7,60 +7,60 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import { Folder, PlaylistItem } from '../types';
+import { Chain, PlaylistItem } from '../types';
 import { t } from '../i18n';
 
 interface Props {
   visible: boolean;
   item: PlaylistItem | null;
-  folders: Folder[];
-  currentFolderId: string;
+  chains: Chain[];
+  currentChainId: string;
   bottomInset: number;
-  onMove: (toFolderId: string) => void;
+  onMove: (toChainId: string) => void;
   onClose: () => void;
 }
 
-export default function MoveToFolderModal({
+export default function MoveToChainModal({
   visible,
   item,
-  folders,
-  currentFolderId,
+  chains,
+  currentChainId,
   bottomInset,
   onMove,
   onClose,
 }: Props) {
-  const otherFolders = folders.filter((f) => f.id !== currentFolderId);
+  const otherChains = chains.filter((c) => c.id !== currentChainId);
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={onClose} />
       <View style={[styles.sheet, { paddingBottom: 24 + bottomInset }]}>
-        <Text style={styles.title}>{t.moveToFolder}</Text>
+        <Text style={styles.title}>{t.moveToChain}</Text>
         {item && (
           <Text style={styles.itemTitle} numberOfLines={1}>
             {item.title}
           </Text>
         )}
-        {otherFolders.length === 0 ? (
-          <Text style={styles.empty}>{t.noOtherFolders}</Text>
+        {otherChains.length === 0 ? (
+          <Text style={styles.empty}>{t.noOtherChains}</Text>
         ) : (
           <FlatList
-            data={otherFolders}
-            keyExtractor={(f) => f.id}
+            data={otherChains}
+            keyExtractor={(c) => c.id}
             style={styles.list}
-            renderItem={({ item: folder }) => (
+            renderItem={({ item: chain }) => (
               <TouchableOpacity
-                style={styles.folderRow}
+                style={styles.chainRow}
                 onPress={() => {
-                  onMove(folder.id);
+                  onMove(chain.id);
                   onClose();
                 }}
               >
-                <View style={styles.folderIcon} />
-                <View style={styles.folderInfo}>
-                  <Text style={styles.folderName}>{folder.name}</Text>
-                  <Text style={styles.folderCount}>
-                    {t.folderVideoCount(folder.items.length)}
+                <View style={styles.chainIcon} />
+                <View style={styles.chainInfo}>
+                  <Text style={styles.chainName}>{chain.name}</Text>
+                  <Text style={styles.chainCount}>
+                    {t.chainVideoCount(chain.items.length)}
                   </Text>
                 </View>
                 <Text style={styles.arrow}>›</Text>
@@ -109,13 +109,13 @@ const styles = StyleSheet.create({
   list: {
     flexGrow: 0,
   },
-  folderRow: {
+  chainRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 13,
     gap: 12,
   },
-  folderIcon: {
+  chainIcon: {
     width: 36,
     height: 30,
     borderRadius: 4,
@@ -124,16 +124,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#555577',
   },
-  folderInfo: {
+  chainInfo: {
     flex: 1,
     gap: 2,
   },
-  folderName: {
+  chainName: {
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
   },
-  folderCount: {
+  chainCount: {
     color: '#666',
     fontSize: 12,
   },

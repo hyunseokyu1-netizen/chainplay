@@ -12,7 +12,7 @@ interface Props {
   onDelete: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
-  onMoveToFolder?: () => void;
+  onMoveToChain?: () => void;
 }
 
 export default function PlaylistItemRow({
@@ -25,7 +25,7 @@ export default function PlaylistItemRow({
   onDelete,
   onMoveUp,
   onMoveDown,
-  onMoveToFolder,
+  onMoveToChain,
 }: Props) {
   return (
     <View style={[styles.container, isCurrent && styles.current]}>
@@ -58,9 +58,9 @@ export default function PlaylistItemRow({
         </View>
       </TouchableOpacity>
 
-      {onMoveToFolder && (
-        <TouchableOpacity style={styles.moveToFolderBtn} onPress={onMoveToFolder} hitSlop={8}>
-          <Text style={styles.moveToFolderIcon}>↗</Text>
+      {onMoveToChain && (
+        <TouchableOpacity style={styles.moveToChainBtn} onPress={onMoveToChain} hitSlop={8}>
+          <Text style={styles.moveToChainIcon}>↗</Text>
         </TouchableOpacity>
       )}
 
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
   },
-  moveToFolderBtn: {
+  moveToChainBtn: {
     paddingHorizontal: 6,
     paddingVertical: 4,
   },
-  moveToFolderIcon: {
+  moveToChainIcon: {
     color: '#555',
     fontSize: 16,
   },

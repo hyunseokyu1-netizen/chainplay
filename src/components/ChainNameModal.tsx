@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function FolderNameModal({
+export default function ChainNameModal({
   visible,
   mode,
   initialName = '',
@@ -68,13 +68,13 @@ export default function FolderNameModal({
         <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} onPress={onClose} />
         <View style={[styles.sheet, { paddingBottom: sheetPaddingBottom }]}>
           <Text style={styles.title}>
-            {mode === 'create' ? t.createFolderTitle : t.renameFolderTitle}
+            {mode === 'create' ? t.createChainTitle : t.renameChainTitle}
           </Text>
           <TextInput
             style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder={t.folderNamePlaceholder}
+            placeholder={t.chainNamePlaceholder}
             placeholderTextColor="#555"
             autoFocus
             maxLength={40}

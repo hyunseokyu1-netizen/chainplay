@@ -45,24 +45,27 @@ export const t = {
   invalidUrl: isKorean ? '유효한 유튜브 URL이 아닙니다.' : 'Invalid YouTube URL.',
   alreadyExists: isKorean ? '이미 플레이리스트에 있습니다.' : 'Already in your playlist.',
 
-  // 폴더 관련
-  defaultFolderName: isKorean ? '기본 폴더' : 'Default',
-  folderListTitle: isKorean ? '폴더' : 'Folders',
-  newFolder: isKorean ? '+ 새 폴더' : '+ New Folder',
-  noFolders: isKorean ? '폴더가 없습니다' : 'No folders yet',
-  noFoldersHint: isKorean ? '아래 버튼으로 폴더를 만들어보세요' : 'Tap + to create a folder',
-  folderVideoCount: (n: number) => isKorean ? `영상 ${n}개` : `${n} video${n === 1 ? '' : 's'}`,
-  createFolderTitle: isKorean ? '폴더 만들기' : 'New Folder',
-  renameFolderTitle: isKorean ? '이름 변경' : 'Rename',
-  folderNamePlaceholder: isKorean ? '폴더 이름' : 'Folder name',
+  // 체인 관련
+  chainIntroDesc: isKorean
+    ? '체인 — 영상을 순서대로 묶어 연속 재생하는 목록'
+    : 'Chain — a playlist that plays videos in sequence',
+  defaultChainName: isKorean ? '기본 체인' : 'Default',
+  chainListTitle: isKorean ? '체인' : 'Chains',
+  newChain: isKorean ? '+ 새 체인' : '+ New Chain',
+  noChains: isKorean ? '체인이 없습니다' : 'No chains yet',
+  noChainsHint: isKorean ? '아래 버튼으로 체인을 만들어보세요' : 'Tap + to create a chain',
+  chainVideoCount: (n: number) => isKorean ? `영상 ${n}개` : `${n} video${n === 1 ? '' : 's'}`,
+  createChainTitle: isKorean ? '체인 만들기' : 'New Chain',
+  renameChainTitle: isKorean ? '이름 변경' : 'Rename',
+  chainNamePlaceholder: isKorean ? '체인 이름' : 'Chain name',
   confirm: isKorean ? '확인' : 'OK',
   cancel: isKorean ? '취소' : 'Cancel',
-  deleteFolderConfirm: (name: string) =>
+  deleteChainConfirm: (name: string) =>
     isKorean
-      ? `"${name}" 폴더를 삭제할까요?\n영상 목록도 함께 삭제됩니다.`
+      ? `"${name}" 체인을 삭제할까요?\n영상 목록도 함께 삭제됩니다.`
       : `Delete "${name}"?\nAll videos in it will be removed.`,
-  moveToFolder: isKorean ? '폴더로 이동' : 'Move to Folder',
-  moveToFolderHint: isKorean ? '이동할 폴더를 선택하세요' : 'Select destination folder',
-  noOtherFolders: isKorean ? '다른 폴더가 없습니다' : 'No other folders',
-  backToFolders: isKorean ? '← 폴더 목록' : '← Folders',
+  moveToChain: isKorean ? '체인으로 이동' : 'Move to Chain',
+  moveToChainHint: isKorean ? '이동할 체인을 선택하세요' : 'Select destination chain',
+  noOtherChains: isKorean ? '다른 체인이 없습니다' : 'No other chains',
+  backToChains: isKorean ? '← 체인 목록' : '← Chains',
 };

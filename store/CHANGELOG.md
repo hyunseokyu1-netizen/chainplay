@@ -5,6 +5,32 @@
 
 ---
 
+## v3.0 (versionCode 3)
+
+**AAB**: `chainplay-v3.0.0.aab`  
+**상태**: 빌드 완료, 스토어 제출 예정
+
+### 추가
+- 체인(Chain) 관리 기능 — 플레이리스트를 체인 단위로 분류·관리
+- 체인 생성 / 이름 변경 / 삭제 (ChainListScreen)
+- 체인별 플레이리스트 화면 (PlaylistScreen) — 체인 ↔ 플레이리스트 화면 전환 구조
+- 영상을 다른 체인으로 이동 (MoveToChainModal) — 체인 2개 이상일 때 ↗ 버튼 표시
+- 기존 `@yt_playlist` 데이터 자동 마이그레이션 (기본 체인으로 이동)
+- 첫 진입 시 체인 개념 안내 배너 표시 (확인 후 영구 숨김)
+- `build_aab.sh` — 빌드 후 릴리즈 폴더 자동 복사 기능 추가
+- `BUILD.md` — 빌드 위치·절차 문서 추가
+
+### 수정
+- 삼성 키보드 상단 툴바 미포함 시 체인 이름 모달 가림 문제 수정 (`overlayPaddingBottom +80px`)
+
+### 스토어 업데이트 설명 (한국어)
+플레이리스트를 체인으로 정리할 수 있습니다. 체인을 만들고 영상을 원하는 체인으로 이동해보세요.
+
+### 스토어 업데이트 설명 (English)
+Organize your playlists with chains. Create chains and move videos between them easily.
+
+---
+
 ## v2.0 (versionCode 2)
 
 **AAB**: `chainplay-v2.0.aab`  

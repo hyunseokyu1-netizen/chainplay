@@ -11,7 +11,7 @@ interface Props {
   onMoveDown: (index: number) => void;
   onDelete: (id: string) => void;
   onPlay: (index: number) => void;
-  onMoveToFolder?: (item: PlaylistItem) => void;
+  onMoveToChain?: (item: PlaylistItem) => void;
 }
 
 export default function Playlist({
@@ -21,7 +21,7 @@ export default function Playlist({
   onMoveDown,
   onDelete,
   onPlay,
-  onMoveToFolder,
+  onMoveToChain,
 }: Props) {
   if (playlist.length === 0) {
     return (
@@ -48,7 +48,7 @@ export default function Playlist({
           onDelete={() => onDelete(item.id)}
           onMoveUp={() => onMoveUp(index)}
           onMoveDown={() => onMoveDown(index)}
-          onMoveToFolder={onMoveToFolder ? () => onMoveToFolder(item) : undefined}
+          onMoveToChain={onMoveToChain ? () => onMoveToChain(item) : undefined}
         />
       )}
     />
