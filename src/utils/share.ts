@@ -1,7 +1,7 @@
 import { Share } from 'react-native';
 import { Chain } from '../types';
 
-const SHARE_BASE_URL = 'https://hyunseokYeo.github.io/chainplay/';
+const SHARE_BASE_URL = 'https://hyunseokyu1-netizen.github.io/chainplay/';
 export const MAX_SHARE_ITEMS = 20;
 
 type SharePayload = {
