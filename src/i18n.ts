@@ -68,4 +68,13 @@ export const t = {
   moveToChainHint: isKorean ? '이동할 체인을 선택하세요' : 'Select destination chain',
   noOtherChains: isKorean ? '다른 체인이 없습니다' : 'No other chains',
   backToChains: isKorean ? '← 체인 목록' : '← Chains',
+
+  // 공유
+  shareChain: isKorean ? '공유' : 'Share',
+  importChainTitle: isKorean ? '체인 가져오기' : 'Import Chain',
+  importChainDesc: (name: string, count: number) =>
+    isKorean
+      ? `"${name}" (영상 ${count}개)을 새 체인으로 가져올까요?`
+      : `Import "${name}" (${count} video${count === 1 ? '' : 's'}) as a new chain?`,
+  importChainFailed: isKorean ? '공유 링크를 읽을 수 없습니다.' : 'Could not read the share link.',
 };

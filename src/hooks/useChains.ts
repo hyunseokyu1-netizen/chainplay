@@ -167,6 +167,32 @@ export function useChains() {
     [save]
   );
 
+  const importChain = useCallback(
+    (name: string, videos: Array<{ videoId: string; title: string }>): string => {
+      const now = Date.now();
+      const items: PlaylistItem[] = videos.map(({ videoId, title }, i) => ({
+        id: `${videoId}_${now + i}`,
+        videoId,
+        title,
+        thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+        url: `https://youtu.be/${videoId}`,
+      }));
+      const chain: Chain = {
+        id: `chain_${now}`,
+        name: name.trim(),
+        items,
+        createdAt: now,
+      };
+      setChains((prev) => {
+        const next = [...prev, chain];
+        save(next);
+        return next;
+      });
+      return chain.id;
+    },
+    [save]
+  );
+
   return {
     chains,
     isLoading,
@@ -177,5 +203,6 @@ export function useChains() {
     removeItemFromChain,
     moveItemInChain,
     moveItemBetweenChains,
+    importChain,
   };
 }

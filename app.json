@@ -24,7 +24,14 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.backdev.chainplay",
       "versionCode": 3,
-      "permissions": []
+      "permissions": [],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [{ "scheme": "chainplay" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
