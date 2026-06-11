@@ -9,7 +9,6 @@
   <meta property="og:title" content="ChainPlay — YouTube 체인 공유">
   <meta property="og:description" content="YouTube 영상 체인을 받았습니다. 앱에서 열어보세요.">
   <meta property="og:image" content="https://hyunseokyu1-netizen.github.io/chainplay/og-image.png">
-  <meta property="og:url" content="https://hyunseokyu1-netizen.github.io/chainplay/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ChainPlay — YouTube 체인 공유">
   <meta name="twitter:description" content="YouTube 영상 체인을 받았습니다. 앱에서 열어보세요.">
@@ -193,7 +192,7 @@
       const c = params.get('c');
 
       if (!c) {
-        root.innerHTML = '<div class="error-box"><p>공유 링크가 올바르지 않습니다.</p></div>';
+        root.innerHTML = `<div class="error-box"><p>공유 링크가 올바르지 않습니다.</p><p style="font-size:11px;color:#444;margin-top:8px;word-break:break-all;">${location.href}</p></div>`;
         return;
       }
 
