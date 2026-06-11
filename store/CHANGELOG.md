@@ -5,6 +5,37 @@
 
 ---
 
+## v4.0 (versionCode 4)
+
+**AAB**: `chainplay-v4.0.0.aab`  
+**상태**: 빌드 완료, 스토어 제출 예정
+
+### 추가
+- 체인 공유 기능 — 플레이리스트 화면 우상단 "공유" 버튼으로 체인을 링크로 공유
+- 단축 공유 URL — `?n=<이름>&v=<videoId,...>` 형식, 제목은 수신 측에서 oEmbed로 복원 (영상 10개 기준 1,351자 → 266자)
+- GitHub Pages 공유 랜딩 페이지 — 영상 목록 미리보기, "앱으로 열기" / Play Store 설치 버튼
+- 딥링크(`chainplay://import`)로 공유받은 체인 가져오기 — 확인 후 새 체인으로 추가, 중복 이름 자동 처리
+- 카카오톡 공유 미리보기 OG 메타 태그 적용
+- 구형식 공유 링크(`?c=base64`) 하위호환 유지
+
+### 스토어 업데이트 설명 (한국어)
+체인 공유 기능이 추가되었습니다. 내가 만든 체인을 링크로 공유하고, 받은 링크를 열어 내 앱으로 바로 가져와보세요.
+
+### 스토어 업데이트 설명 (English)
+You can now share your chains. Send a chain as a link, and import shared chains directly into your app.
+
+### Play Console 출시 노트 (복붙용)
+```
+<ko-KR>
+체인 공유 기능이 추가되었습니다. 내가 만든 체인을 링크로 공유하고, 받은 링크를 열어 내 앱으로 바로 가져와보세요.
+</ko-KR>
+<en-US>
+You can now share your chains. Send a chain as a link, and import shared chains directly into your app.
+</en-US>
+```
+
+---
+
 ## v3.0 (versionCode 3)
 
 **AAB**: `chainplay-v3.0.0.aab`  
