@@ -14,12 +14,14 @@ function toBase64(str: string): string {
     encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) =>
       String.fromCharCode(parseInt(p1, 16))
     )
-  );
+  ).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
 function fromBase64(b64: string): string {
+  const standard = b64.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = standard + '=='.slice((standard.length + 3) % 4);
   return decodeURIComponent(
-    atob(b64)
+    atob(padded)
       .split('')
       .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
       .join('')
@@ -56,6 +58,6 @@ export function decodeChain(base64: string): DecodedChain | null {
 
 export async function shareChain(chain: Chain): Promise<void> {
   const base64 = encodeChain(chain);
-  const url = `${SHARE_BASE_URL}?c=${encodeURIComponent(base64)}`;
-  await Share.share({ message: url, title: chain.name });
+  const url = `${SHARE_BASE_URL}?c=${base64}`;
+  await Share.share({ message: url });
 }
