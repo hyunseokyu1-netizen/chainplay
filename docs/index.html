@@ -186,29 +186,61 @@
       }
     }
 
+    // 새 형식: ?n=<체인이름>&v=<videoId,videoId,...> / 구 형식: ?c=<base64 JSON>
+    function parseParams() {
+      const params = new URLSearchParams(window.location.search);
+      const n = params.get('n');
+      const v = params.get('v');
+      if (n && v) {
+        const ids = v.split(',').filter(id => /^[a-zA-Z0-9_-]{11}$/.test(id));
+        if (ids.length === 0) return null;
+        return {
+          name: n,
+          videos: ids.map(videoId => ({ videoId, title: '' })),
+          deepLink: 'chainplay://import?n=' + encodeURIComponent(n) + '&v=' + ids.join(','),
+        };
+      }
+      const c = params.get('c');
+      if (c) {
+        const chain = parseChain(c);
+        if (!chain) return null;
+        chain.deepLink = 'chainplay://import?data=' + encodeURIComponent(c);
+        return chain;
+      }
+      return null;
+    }
+
+    async function loadTitles(videos) {
+      await Promise.all(videos.map(async (v, i) => {
+        if (v.title) return;
+        try {
+          const url = 'https://www.youtube.com/oembed?url=' +
+            encodeURIComponent('https://youtu.be/' + v.videoId) + '&format=json';
+          const res = await fetch(url);
+          if (!res.ok) return;
+          const data = await res.json();
+          const el = document.getElementById('vt-' + i);
+          if (el && data.title) el.textContent = data.title;
+        } catch {}
+      }));
+    }
+
     function render() {
       const root = document.getElementById('root');
-      const params = new URLSearchParams(window.location.search);
-      const c = params.get('c');
 
-      if (!c) {
+      const chain = parseParams();
+      if (!chain) {
         root.innerHTML = `<div class="error-box"><p>공유 링크가 올바르지 않습니다.</p><p style="font-size:11px;color:#444;margin-top:8px;word-break:break-all;">${location.href}</p></div>`;
         return;
       }
 
-      const chain = parseChain(c);
-      if (!chain) {
-        root.innerHTML = '<div class="error-box"><p>링크를 읽을 수 없습니다.</p></div>';
-        return;
-      }
-
-      const deepLink = 'chainplay://import?data=' + encodeURIComponent(c);
+      const deepLink = chain.deepLink;
 
       const videoItems = chain.videos.map((v, i) => `
         <a class="video-item" href="https://youtu.be/${v.videoId}" target="_blank" rel="noopener">
           <span class="num">${i + 1}</span>
           <img class="thumb" src="https://img.youtube.com/vi/${v.videoId}/mqdefault.jpg" alt="">
-          <span class="video-title">${escapeHtml(v.title)}</span>
+          <span class="video-title" id="vt-${i}">${escapeHtml(v.title || 'YouTube 영상')}</span>
         </a>
       `).join('');
 
@@ -225,6 +257,8 @@
         <div class="section-title">영상 목록</div>
         <div class="video-list">${videoItems}</div>
       `;
+
+      loadTitles(chain.videos);
     }
 
     function tryOpenApp(deepLink) {

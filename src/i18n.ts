@@ -77,4 +77,5 @@ export const t = {
       ? `"${name}" (영상 ${count}개)을 새 체인으로 가져올까요?`
       : `Import "${name}" (${count} video${count === 1 ? '' : 's'}) as a new chain?`,
   importChainFailed: isKorean ? '공유 링크를 읽을 수 없습니다.' : 'Could not read the share link.',
+  unknownVideoTitle: isKorean ? '제목 없음' : 'Untitled',
 };
