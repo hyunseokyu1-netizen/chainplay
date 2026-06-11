@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Chain, PlaylistItem } from '../types';
 import { t } from '../i18n';
+import { shareChain } from '../utils/share';
 import Player from '../components/Player';
 import Playlist from '../components/Playlist';
 import AddUrlModal from '../components/AddUrlModal';
@@ -89,6 +90,10 @@ export default function PlaylistScreen({
     [chain.id, items, moveTarget, onMoveItemBetweenChains]
   );
 
+  const handleShare = useCallback(() => {
+    shareChain(chain);
+  }, [chain]);
+
   const currentItem = items[currentIndex] ?? null;
 
   return (
@@ -97,6 +102,11 @@ export default function PlaylistScreen({
         <TouchableOpacity style={styles.backBtn} onPress={onBack} hitSlop={8}>
           <Text style={styles.backText}>{t.backToChains}</Text>
         </TouchableOpacity>
+        {items.length > 0 && (
+          <TouchableOpacity onPress={handleShare} hitSlop={8}>
+            <Text style={styles.shareText}>{t.shareChain}</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <Player
@@ -157,15 +167,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#1e1e2e',
   },
-  backBtn: {
-    alignSelf: 'flex-start',
-  },
+  backBtn: {},
   backText: {
+    color: '#00d8f0',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  shareText: {
     color: '#00d8f0',
     fontSize: 14,
     fontWeight: '600',

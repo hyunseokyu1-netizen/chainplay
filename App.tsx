@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, StatusBar, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StatusBar, StyleSheet, Linking, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useChains } from './src/hooks/useChains';
 import { t } from './src/i18n';
+import { parseShareUrl, DecodedChain } from './src/utils/share';
+import { fetchVideoInfo } from './src/utils/youtube';
 import ChainListScreen from './src/screens/ChainListScreen';
 import PlaylistScreen from './src/screens/PlaylistScreen';
 
@@ -20,7 +22,38 @@ function AppContent() {
     removeItemFromChain,
     moveItemInChain,
     moveItemBetweenChains,
+    importChain,
   } = useChains();
+
+  useEffect(() => {
+    async function importWithTitles(decoded: DecodedChain) {
+      const videos = await Promise.all(
+        decoded.videos.map(async (v) => {
+          if (v.title) return v;
+          const info = await fetchVideoInfo(`https://youtu.be/${v.videoId}`);
+          return { ...v, title: info?.title ?? t.unknownVideoTitle };
+        })
+      );
+      importChain(decoded.name, videos);
+    }
+
+    function handleDeepLink(url: string) {
+      if (!url.startsWith('chainplay://import')) return;
+      const decoded = parseShareUrl(url);
+      if (!decoded) {
+        Alert.alert('', t.importChainFailed);
+        return;
+      }
+      Alert.alert(t.importChainTitle, t.importChainDesc(decoded.name, decoded.videos.length), [
+        { text: t.cancel, style: 'cancel' },
+        { text: t.confirm, onPress: () => importWithTitles(decoded) },
+      ]);
+    }
+
+    Linking.getInitialURL().then((url) => { if (url) handleDeepLink(url); });
+    const sub = Linking.addEventListener('url', ({ url }) => handleDeepLink(url));
+    return () => sub.remove();
+  }, [importChain]);
 
   const activeChain = activeChainId ? chains.find((c) => c.id === activeChainId) ?? null : null;
 
